@@ -22,15 +22,26 @@ namespace Happy_Company_Warehouse.Controllers
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUserAsync([FromBody] UserModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var result = await _authService.AddUserAsync(model); 
-            return Ok(result);
+                var result = await _authService.AddUserAsync(model);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                LogsServices.LogError(e, "Catch Error:");
+                return BadRequest(new
+                {
+                    message = e.Message
+                });
+            }
         }
         [HttpGet]
         [Route("All")]
-        public async Task<IActionResult> Index([FromQuery] FilterActivities filter )
+        public async Task<IActionResult> Index([FromQuery] FilterActivities filter)
         {
             try
             {
@@ -39,6 +50,7 @@ namespace Happy_Company_Warehouse.Controllers
             }
             catch (Exception ex)
             {
+                LogsServices.LogError(ex, "Catch Error:");
                 return BadRequest(ex.Message);
             }
         }

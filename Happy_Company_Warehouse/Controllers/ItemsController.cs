@@ -26,6 +26,7 @@ namespace Happy_Company_Warehouse.Controllers
             }
             catch (Exception ex)
             {
+                LogsServices.LogError(ex, "Catch Error:");
                 return BadRequest(ex.Message);
             }
         }
@@ -50,6 +51,7 @@ namespace Happy_Company_Warehouse.Controllers
             }
             catch (Exception ex)
             {
+                LogsServices.LogError(ex, "Catch Error:");
                 return BadRequest(ex.Message);
             }
         }
@@ -75,6 +77,7 @@ namespace Happy_Company_Warehouse.Controllers
             }
             catch (Exception ex)
             {
+                LogsServices.LogError(ex, "Catch Error:");
                 return BadRequest(ex.Message);
             }
         }
@@ -89,6 +92,7 @@ namespace Happy_Company_Warehouse.Controllers
             }
             catch (Exception ex)
             {
+                LogsServices.LogError(ex, "Catch Error:");
                 return BadRequest(ex.Message);
             }
         }

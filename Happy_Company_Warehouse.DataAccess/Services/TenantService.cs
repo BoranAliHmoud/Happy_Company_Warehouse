@@ -14,6 +14,7 @@ public class TenantService : ITenantService
 
     public TenantService(IHttpContextAccessor contextAccessor,   IOptions<AppSettings> appSettings)
     {
+        try {
         _httpContext = contextAccessor.HttpContext;
      
         _appSettings = appSettings.Value;
@@ -27,9 +28,19 @@ public class TenantService : ITenantService
             }
             else
             {
+              
                 throw new Exception("No tenant provided!");
             }
+
+            }
         }
+        catch (Exception e)
+        {
+            LogsServices.LogError(e, "Catch Error:"); 
+             
+
+        }
+
     }
 
     public string? GetConnectionString()
@@ -53,16 +64,25 @@ public class TenantService : ITenantService
 
     private void SetCurrentTenant(string tenantId)
     {
-        _currentTenant = _appSettings.TenantSettings.Tenants.FirstOrDefault(t => t.TId == tenantId);
-
-        if (_currentTenant is null)
+        try
         {
-            throw new Exception("Invalid tenant ID");
+            _currentTenant = _appSettings.TenantSettings.Tenants.FirstOrDefault(t => t.TId == tenantId);
+
+            if (_currentTenant is null)
+            {
+
+                throw new Exception("Invalid tenant ID");
+            }
+
+            if (string.IsNullOrEmpty(_currentTenant.ConnectionString))
+            {
+                _currentTenant.ConnectionString = _appSettings.TenantSettings.Defaults.ConnectionString;
+            }
         }
-
-        if (string.IsNullOrEmpty(_currentTenant.ConnectionString))
+        catch (Exception e)
         {
-            _currentTenant.ConnectionString = _appSettings.TenantSettings.Defaults.ConnectionString;
+            LogsServices.LogError(e, "Catch Error:"); 
+ 
         }
     }
 }

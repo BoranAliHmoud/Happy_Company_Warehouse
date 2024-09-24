@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System;
 using System.Text;
 using THappy_Company_Warehouse.DataAccess.Services;
@@ -100,6 +101,10 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
+builder.Host.UseSerilog((hostContext, services, configuration) => {
+    configuration.ReadFrom.Configuration(hostContext.Configuration)
+  .Enrich.FromLogContext();
+});
 //End
 
 var app = builder.Build();
@@ -112,7 +117,7 @@ if (app.Environment.IsDevelopment())
 }
  
 app.UseHttpsRedirection();
-
+app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowAll");

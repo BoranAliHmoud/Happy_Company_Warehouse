@@ -67,8 +67,8 @@ namespace Happy_Company_Warehouse.Middleware
             }
             catch (Exception ex)
             {
-              //  LogsServices.LogError($"IDM | CAA |General Server Error :{ex.Message}");
-                throw;
+                LogsServices.LogError(ex, "Catch Error:");
+                 throw;
             }
         }
 
